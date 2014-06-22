@@ -37,35 +37,49 @@ namespace BeeDownloader.Views
 		{
 			string link = mUrlInput.Text;
 			VideoInfo video = null;
-			
-			try
-			{
-				var videos = DownloadUrlResolver.GetDownloadUrls(link);
-				video = videos.Where(info => info.CanExtractAudio)
-								.OrderByDescending(info => info.AudioBitrate)
-								.FirstOrDefault();
 
-			}catch(ArgumentException ex)
-			{
-				MessageBox.Show(ex.Message);
-				return;
+			Exception bwError = null;
 
-			}catch(YoutubeParseException)
-			{
-				MessageBox.Show("Failed to parse the Youtube page!");
-				return;
+			ProgressBox progBox = new ProgressBox();
+			progBox.ProgressText = "Search video...";
 
-			}catch(VideoNotAvailableException)
-			{
-				MessageBox.Show("Video is not accessible!");
-				return;
-			}
+			BackgroundWorker bw = new BackgroundWorker();
+			bw.DoWork += (ev, args) =>
+				{
+					var videos = DownloadUrlResolver.GetDownloadUrls(link);
+					video = videos.Where(info => info.CanExtractAudio)
+									.OrderByDescending(info => info.AudioBitrate)
+									.FirstOrDefault();
+				};
+			bw.RunWorkerCompleted += (ev, args) =>
+				{
+					if (args.Error != null)
+					{
+						bwError = args.Error;
+						progBox.DialogResult = DialogResult.Abort;
+					}
+					else if(args.Cancelled)
+					{
+						progBox.DialogResult = DialogResult.Cancel;
+					}
+					else
+					{
+						progBox.DialogResult = DialogResult.OK;
+					}
+				};
+			bw.RunWorkerAsync();
 
-
-			if(video == null)
+			switch(progBox.ShowDialog(this))
 			{
-				MessageBox.Show("No video found!");
-				return;
+				case DialogResult.Cancel:
+					return;
+				case DialogResult.OK:
+					if(video != null)
+						break;
+					goto case DialogResult.Abort;
+				case DialogResult.Abort:
+					MessageBox.Show(this, "Failed to get download url!\n" + (bwError != null? bwError.ToString() : "No reason!"), "Error while searching Youtube!");
+					return;
 			}
 
 			DownloadVideo dvideo = null;
