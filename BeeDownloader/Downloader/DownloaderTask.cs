@@ -141,6 +141,7 @@ namespace BeeDownloader.Downloader
 					{
 						ProgressEvent("Move audio file to inbox...", 1.0);
 						mApi.Library_AddFileToLibrary(target, Plugin.LibraryCategory.Inbox);
+						mApi.MB_RefreshPanels();
 					}
 
 					ProgressEvent("Done.", 1.0);
