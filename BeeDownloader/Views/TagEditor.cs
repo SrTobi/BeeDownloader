@@ -31,7 +31,7 @@ namespace BeeDownloader.Views
 
 			videoTitle = skipper.Replace(videoTitle, "");
 
-			Regex parser = new Regex(@"(?<title>[^-]*)-(?<artist>[^\|\/\;\.\-\']*).*");
+			Regex parser = new Regex(@"(?<title>[^-]*)-(?<artist>[^\|\/\;\-\']*).*");
 
 			Match match = parser.Match(videoTitle);
 
