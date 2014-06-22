@@ -97,6 +97,7 @@
 			this.mUrlInput.Name = "mUrlInput";
 			this.mUrlInput.Size = new System.Drawing.Size(599, 20);
 			this.mUrlInput.TabIndex = 1;
+			this.mUrlInput.TextChanged += new System.EventHandler(this.OnLinkInputChanged);
 			this.mUrlInput.Enter += new System.EventHandler(this.OnFocus);
 			// 
 			// label1

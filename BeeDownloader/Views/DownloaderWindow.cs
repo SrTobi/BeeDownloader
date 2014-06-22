@@ -17,6 +17,7 @@ namespace BeeDownloader.Views
 	{
 		private DownloaderTask mTask;
 		private PluginSettings mSettings;
+		private ICollection<string> mAlreadyDownloadedUrls = new LinkedList<string>();
 
 		public DownloaderWindow(DownloaderTask task, PluginSettings settings)
 		{
@@ -36,6 +37,13 @@ namespace BeeDownloader.Views
 		private void OnDownloadClicked(object sender, EventArgs e)
 		{
 			string link = mUrlInput.Text;
+			string normalizedLink;
+
+			if(!DownloadUrlResolver.TryNormalizeYoutubeUrl(link, out normalizedLink))
+			{
+				throw new ArgumentException("the download button should be disabled by now!");
+			}
+
 			VideoInfo video = null;
 
 			Exception bwError = null;
@@ -103,11 +111,12 @@ namespace BeeDownloader.Views
 			}
 
 
+			mAlreadyDownloadedUrls.Add(normalizedLink);
 			mUrlInput.Text = "";
 			mReportBox.AppendText("Add video to pending: " + video.Title + "\n");
 			mTask.AddVideo(dvideo);
 			mStopButton.Text = "Stop";
-			fillListView();
+			FillListView();
 		}
 
 		private void OnProgress(string status, double progress)
@@ -118,7 +127,7 @@ namespace BeeDownloader.Views
 				{
 					mReportBox.AppendText(status + "\n");
 					var current = mTask.CurrentVideo;
-					fillListView();
+					FillListView();
 
 					if(current != null)
 					{
@@ -143,17 +152,10 @@ namespace BeeDownloader.Views
 				string downloadUrl = (mTask.CurrentVideo != null ? mTask.CurrentVideo.Info.DownloadUrl : null);
 				
 				string normalized;
-				if (DownloadUrlResolver.TryNormalizeYoutubeUrl(text, out normalized)
-					&& !string.Equals(normalized, downloadUrl))
+				if (DownloadUrlResolver.TryNormalizeYoutubeUrl(text, out normalized))
 				{
-					foreach(var track in mTask.PendingVideos)
-					{
-						if(string.Equals(track.Info.DownloadUrl, normalized))
-						{
-							return;
-						}
-					}
-
+					if (mAlreadyDownloadedUrls.Contains(normalized))
+						return;
 					mUrlInput.Text = text;
 				}
 			}
@@ -171,7 +173,7 @@ namespace BeeDownloader.Views
 			}
 		}
 
-		private void fillListView()
+		private void FillListView()
 		{
 			mPendingList.BeginUpdate();
 			mPendingList.Items.Clear();
@@ -180,6 +182,14 @@ namespace BeeDownloader.Views
 				mPendingList.Items.Add(new ListViewItem(new string[] { track.Title, track.Artist, track.OriginalTitle }));
 			}
 			mPendingList.EndUpdate();
+		}
+
+		private void OnLinkInputChanged(object sender, EventArgs e)
+		{
+			string link = mUrlInput.Text;
+			string normalizedLink;
+
+			mDownloadButton.Enabled = DownloadUrlResolver.TryNormalizeYoutubeUrl(link, out normalizedLink);
 		}
 	}
 }
