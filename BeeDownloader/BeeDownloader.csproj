@@ -35,7 +35,8 @@
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.5.0.8\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="policy.2.0.taglib-sharp">
+    <Reference Include="policy.2.0.taglib-sharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=db62eba44689b5b0, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\taglib.2.1.0.0\lib\policy.2.0.taglib-sharp.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -47,10 +48,12 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="taglib-sharp">
+    <Reference Include="taglib-sharp, Version=2.1.0.0, Culture=neutral, PublicKeyToken=db62eba44689b5b0, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\taglib.2.1.0.0\lib\taglib-sharp.dll</HintPath>
     </Reference>
-    <Reference Include="YoutubeExtractor">
+    <Reference Include="YoutubeExtractor, Version=0.10.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\YoutubeExtractor.0.10.1\lib\net35\YoutubeExtractor.dll</HintPath>
     </Reference>
   </ItemGroup>
@@ -73,6 +76,12 @@
     <Compile Include="Views\DownloaderWindow.Designer.cs">
       <DependentUpon>DownloaderWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\ProgressBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\ProgressBox.Designer.cs">
+      <DependentUpon>ProgressBox.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\SettingsWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -94,6 +103,9 @@
     <EmbeddedResource Include="Views\DownloaderWindow.resx">
       <DependentUpon>DownloaderWindow.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Views\ProgressBox.resx">
+      <DependentUpon>ProgressBox.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\SettingsWindow.resx">
       <DependentUpon>SettingsWindow.cs</DependentUpon>
     </EmbeddedResource>
@@ -103,13 +115,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\swap.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>REM xcopy /Y "$(TargetDir)$(TargetFileName)" "C:\Program Files (x86)\MusicBee\Plugins"</PostBuildEvent>
+    <PostBuildEvent>REM nix
+xcopy /Y "$(TargetDir)$(TargetFileName)" "C:\Program Files (x86)\MusicBee\Plugins"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

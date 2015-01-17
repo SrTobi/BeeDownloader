@@ -1,5 +1,7 @@
 @echo off
 
+setlocal
+set PATH=%PATH%;C:\Program Files\WinRar\
 set comp=compilation
 set file=BeeDownloader.zip
 set target=Debug
