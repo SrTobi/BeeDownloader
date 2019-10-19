@@ -1,3 +1,5 @@
+19.10.2019: This project is not maintained. I don't use MusicBee anymore and don't even have the developer tools on my computer. Please feel free to fork it. The main reason why it does not work might be the [YoutubeExtractor library](https://github.com/flagbug/YoutubeExtractor), which seems to be abandoned as well. There are however many forks of it, so you might be able to find one that is working.
+
 # BeeDownloader
 
 This plugin adds a downloader to MusicBee, which enables you to download videos from youtube, extract their audio tracks and automatically 
